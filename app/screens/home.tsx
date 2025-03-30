@@ -64,7 +64,7 @@ export default function HomeScreen() {
                             <MaterialIcons name="library-books" size={30} color="#007537" />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.menuItem, { bottom: 20, right: 110 }]}>
+                        <TouchableOpacity onPress={() => router.push('/screens/chat')} style={[styles.menuItem, { bottom: 20, right: 110 }]}>
                             <FontAwesome5 name="comments" size={30} color="#007537" />
                         </TouchableOpacity>
                     </View>

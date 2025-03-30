@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Alert, Button, Text } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Alert, Button, SafeAreaView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
@@ -11,6 +11,7 @@ export default function WeatherScreen() {
     const [location, setLocation] = useState(null);
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedLocation, setSelectedLocation] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -39,6 +40,12 @@ export default function WeatherScreen() {
         }
     };
 
+    const handleMapPress = (event) => {
+        const { latitude, longitude } = event.nativeEvent.coordinate;
+        setSelectedLocation({ latitude, longitude });
+        fetchWeather(latitude, longitude);
+    };
+
     if (loading) {
         return <ActivityIndicator size="large" color="#007537" />;
     }
@@ -50,17 +57,21 @@ export default function WeatherScreen() {
     const { latitude, longitude } = location.coords;
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.safeArea}>
             <MapView
                 style={styles.map}
                 initialRegion={{
-                    latitude,
-                    longitude,
+                    latitude: selectedLocation ? selectedLocation.latitude : latitude,
+                    longitude: selectedLocation ? selectedLocation.longitude : longitude,
                     latitudeDelta: 0.05,
                     longitudeDelta: 0.05,
                 }}
+                onPress={handleMapPress}
             >
-                <Marker coordinate={{ latitude, longitude }} title="Your Location" />
+                <Marker
+                    coordinate={selectedLocation || { latitude, longitude }}
+                    title="Selected Location"
+                />
             </MapView>
 
             <View style={styles.infoBox}>
@@ -70,28 +81,35 @@ export default function WeatherScreen() {
                 <ThemedText type="subtitle">Description: {weather.weather[0].description}</ThemedText>
                 <Button title="Refresh" onPress={() => fetchWeather(latitude, longitude)} />
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
+        flex: 1,
+    },
+    mapContainer: {
         flex: 1,
     },
     map: {
         width: '100%',
-        height: '50%',
+        height: '100%',
     },
     infoBox: {
-        padding: 20,
-        backgroundColor: '#FFF',
-        borderTopLeftRadius: 12,
-        borderTopRightRadius: 12,
         position: 'absolute',
         bottom: 0,
         width: '100%',
+        padding: 20,
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 6,
+    },
+    title: {
+        marginBottom: 10,
+        color: '#007537',
     },
 });
