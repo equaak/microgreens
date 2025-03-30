@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { FontAwesome5, MaterialIcons, Ionicons, Feather } from '@expo/vector-icons';
+import { FontAwesome5, MaterialIcons, Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 
@@ -36,8 +36,12 @@ export default function HomeScreen() {
         <SafeAreaView style={{ flex: 1 }}>
             <ThemedView style={styles.container}>
                 <View style={styles.header}>
-                    <Image style={styles.back} source={require('../../assets/images/chevron-left.png')} />
+                    <TouchableOpacity onPress={() => router.push('/screens/add')}>
+                        <AntDesign name="pluscircle" size={30} color="#007537" />
+                    </TouchableOpacity>
+
                     <ThemedText type='subtitle'>SEEDS</ThemedText>
+
                     <TouchableOpacity onPress={toggleMenu}>
                         <Image style={styles.icon} source={require('../../assets/images/user (1).png')} />
                     </TouchableOpacity>

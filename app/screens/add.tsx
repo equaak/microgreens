@@ -23,13 +23,13 @@ export default function AddBatchScreen() {
                 substrate
             });
 
-            if (response.data) {
-                Alert.alert('Success', 'Batch added successfully!');
-                setName('');
-                setType('');
-                setSowingDate('');
-                setSubstrate('');
-            }
+            console.log(response.data);
+
+            Alert.alert('Success', 'Batch added successfully!');
+            setName('');
+            setType('');
+            setSowingDate('');
+            setSubstrate('');
         } catch (error) {
             console.error('Error adding batch:', error);
             Alert.alert('Error', 'Failed to add batch. Please try again.');
@@ -40,7 +40,7 @@ export default function AddBatchScreen() {
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <ThemedText type="title" style={styles.title}>Add New Batch</ThemedText>
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder="Batch Name"
