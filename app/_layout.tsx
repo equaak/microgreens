@@ -32,6 +32,8 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name='index' options={{headerShown: false}} />
         <Stack.Screen name='screens/home' options={{headerShown: false}} />
+        <Stack.Screen name='screens/batch' options={{ headerShown: false }} />
+        <Stack.Screen name='screens/weather' options={{ headerShown: false }}/>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>

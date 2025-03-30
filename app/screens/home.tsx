@@ -52,17 +52,24 @@ export default function HomeScreen() {
                         <TouchableOpacity style={[styles.menuItem, { bottom: 150, right: 0 }]}>
                             <Ionicons name="home" size={30} color="#007537" />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.menuItem, { bottom: 120, right: 60 }]}>
+
+                        <TouchableOpacity
+                            style={[styles.menuItem, { bottom: 120, right: 60 }]}
+                            onPress={() => router.push('/screens/weather')}  // Add this line for navigation
+                        >
                             <Feather name="cloud" size={30} color="#007537" />
                         </TouchableOpacity>
+
                         <TouchableOpacity style={[styles.menuItem, { bottom: 75, right: 100 }]}>
                             <MaterialIcons name="library-books" size={30} color="#007537" />
                         </TouchableOpacity>
+
                         <TouchableOpacity style={[styles.menuItem, { bottom: 20, right: 110 }]}>
                             <FontAwesome5 name="comments" size={30} color="#007537" />
                         </TouchableOpacity>
                     </View>
                 )}
+
 
                 <Text style={styles.batchHeader}>Batches</Text>
 
@@ -71,10 +78,10 @@ export default function HomeScreen() {
                 ) : (
                     <ScrollView style={styles.batchList}>
                         {batches.map((batch) => (
-                            <TouchableOpacity 
-                                key={batch.batch_id} 
+                            <TouchableOpacity
+                                key={batch.batch_id}
                                 style={styles.batchItem}
-                                onPress={() => router.push(`/screens/BatchDetailScreen?id=${batch.batch_id}`)}
+                                onPress={() => router.push(`/screens/batch?id=${batch.batch_id}`)}
                             >
                                 <Text style={styles.batchTitle}>{batch.name}</Text>
                                 <Text style={styles.batchSubtitle}>{batch.type} - {batch.status}</Text>
