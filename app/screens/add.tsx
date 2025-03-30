@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Alert, SafeAreaView, ScrollView, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Alert, SafeAreaView, ScrollView, Text, Platform } from 'react-native';
 import axios from 'axios';
 import { ThemedText } from '@/components/ThemedText';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AddBatchScreen() {
     const [name, setName] = useState('');
     const [type, setType] = useState('');
-    const [sowingDate, setSowingDate] = useState('');
     const [substrate, setSubstrate] = useState('');
+    const [sowingDate, setSowingDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const handleAddBatch = async () => {
         if (!name || !type || !sowingDate || !substrate) {
@@ -19,7 +21,7 @@ export default function AddBatchScreen() {
             const response = await axios.post('http://192.168.0.110:5050/batches', {
                 name,
                 type,
-                sowing_date: sowingDate,
+                sowing_date: sowingDate.toISOString().split('T')[0], // Formatting to YYYY-MM-DD
                 substrate
             });
 
@@ -28,12 +30,22 @@ export default function AddBatchScreen() {
             Alert.alert('Success', 'Batch added successfully!');
             setName('');
             setType('');
-            setSowingDate('');
+            setSowingDate(new Date());
             setSubstrate('');
         } catch (error) {
             console.error('Error adding batch:', error);
             Alert.alert('Error', 'Failed to add batch. Please try again.');
         }
+    };
+
+    const showDatePickerModal = () => {
+        setShowDatePicker(true);
+    };
+
+    const handleDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || sowingDate;
+        setShowDatePicker(Platform.OS === 'ios');
+        setSowingDate(currentDate);
     };
 
     return (
@@ -57,13 +69,18 @@ export default function AddBatchScreen() {
                     placeholderTextColor="#8F8F8F"
                 />
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Sowing Date (YYYY-MM-DD)"
-                    value={sowingDate}
-                    onChangeText={setSowingDate}
-                    placeholderTextColor="#8F8F8F"
-                />
+                <TouchableOpacity style={styles.dateInput} onPress={showDatePickerModal}>
+                    <Text style={styles.dateText}>{sowingDate.toDateString()}</Text>
+                </TouchableOpacity>
+                
+                {showDatePicker && (
+                    <DateTimePicker
+                        value={sowingDate}
+                        mode="date"
+                        display="default"
+                        onChange={handleDateChange}
+                    />
+                )}
 
                 <TextInput
                     style={styles.input}
@@ -108,6 +125,19 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 5,
+    },
+    dateInput: {
+        width: '100%',
+        padding: 15,
+        borderWidth: 1,
+        borderColor: '#DDD',
+        backgroundColor: '#FFF',
+        borderRadius: 12,
+        marginBottom: 15,
+        justifyContent: 'center',
+    },
+    dateText: {
+        color: '#007537',
     },
     button: {
         backgroundColor: '#007537',
